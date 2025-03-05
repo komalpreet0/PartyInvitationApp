@@ -1,22 +1,5 @@
-﻿@{
-    string firstVisitMessage = "Welcome! This is your first time visiting.";
-    string cookieValue = Context.Request.Cookies["FirstVisit"];
-
-    if (string.IsNullOrEmpty(cookieValue))
-    {
-        // Set the cookie for first visit
-        cookieValue = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        Context.Response.Cookies.Append("FirstVisit", cookieValue, new CookieOptions
-                {
-                    Expires = DateTime.Now.AddYears(1) // Cookie expires in 1 year
-                });
-    }
-    else
-    {
-        firstVisitMessage = $"Welcome back! Your first visit was on {cookieValue}.";
-    }
-}
-
-<div class="alert alert-info mt-3">
-    <p>@firstVisitMessage</p>
+﻿@* CookieMessage.cshtml *@
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    <strong>Cookies Notice:</strong> This website uses cookies to ensure you get the best experience.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
