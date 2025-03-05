@@ -6,17 +6,19 @@ namespace PartyInvitationApp.Models
 {
     public class Party
     {
-        public int Id { get; set; }
+        [Key]
+        public int Id { get; set; } // ✅ Ensure primary key exists
 
         [Required]
-        public string Description { get; set; } = string.Empty; // FIX: Provide default value
+        public string Description { get; set; } = string.Empty;
 
         [Required]
         public DateTime EventDate { get; set; }
 
         [Required]
-        public string Location { get; set; } = string.Empty; // FIX: Provide default value
+        public string Location { get; set; } = string.Empty;
 
-        public List<Invitation> Invitations { get; set; } = new List<Invitation>(); // FIX: Initialize List
+        // ✅ Ensure it has an Invitation list
+        public List<Invitation> Invitations { get; set; } = new List<Invitation>();
     }
 }

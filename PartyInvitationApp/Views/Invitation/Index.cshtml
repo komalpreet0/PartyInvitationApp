@@ -1,0 +1,32 @@
+﻿@model IEnumerable<PartyInvitationApp.Models.Invitation>
+
+@{
+    ViewData["Title"] = "All Invitations";
+}
+
+<h2>All Invitations</h2>
+<a href="/Party/Index" class="btn btn-primary mb-3">Back to Parties</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Guest Name</th>
+            <th>Guest Email</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var invitation in Model)
+        {
+            <tr>
+                <td>@invitation.GuestName</td>
+                <td>@invitation.GuestEmail</td>
+                <td>@invitation.Status</td>
+                <td>
+                    <a href="/Invitation/Response/@invitation.Id" class="btn btn-info btn-sm">Respond</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
