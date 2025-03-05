@@ -23,35 +23,24 @@ namespace PartyInvitationApp.Controllers
         [HttpPost]
         public async Task<IActionResult> SendInvitation(int partyId, string guestName, string guestEmail)
         {
-            if (string.IsNullOrEmpty(guestName) || string.IsNullOrEmpty(guestEmail))
-            {
-                ModelState.AddModelError(string.Empty, "Guest name and email are required.");
-                return RedirectToAction("Manage", "Party", new { id = partyId });
-            }
-
             var invitation = new Invitation
             {
                 GuestName = guestName,
                 GuestEmail = guestEmail,
                 PartyId = partyId,
-                Status = InvitationStatus.InviteNotSent
+                Status = InvitationStatus.InviteSent
             };
 
             _context.Invitations.Add(invitation);
             await _context.SaveChangesAsync();
 
             // Send the invitation email
-            string subject = $"You're Invited to a Party!";
+            string subject = $"You're Invited to {partyId}!";
             string body = $"Hello {guestName},<br/>" +
-                          $"You've been invited to a party! Please RSVP here: " +
-                          $"<a href='https://localhost:7008/Invitation/Respond/{invitation.Id}'>Click here to respond</a>";
+                          $"You've been invited to an event! Please RSVP here: " +
+                          $"<a href='https://yourwebsite.com/Invitation/Respond/{invitation.InvitationId}'>Click here to respond</a>";
 
             await _emailService.SendInvitationEmail(guestEmail, subject, body);
-
-            // Update status to 'InvitationSent'
-            invitation.Status = InvitationStatus.InvitationSent;
-            _context.Update(invitation);
-            await _context.SaveChangesAsync();
 
             return RedirectToAction("Manage", "Party", new { id = partyId });
         }
@@ -74,26 +63,8 @@ namespace PartyInvitationApp.Controllers
             if (invitation == null)
                 return NotFound();
 
-            if (response == "Yes")
-                invitation.Status = InvitationStatus.RespondedYes;
-            else if (response == "No")
-                invitation.Status = InvitationStatus.RespondedNo;
-
+            invitation.Status = response == "Yes" ? InvitationStatus.RespondedYes : InvitationStatus.RespondedNo;
             _context.Update(invitation);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Manage", "Party", new { id = invitation.PartyId });
-        }
-
-        // Delete an invitation
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var invitation = await _context.Invitations.FindAsync(id);
-            if (invitation == null)
-                return NotFound();
-
-            _context.Invitations.Remove(invitation);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Manage", "Party", new { id = invitation.PartyId });

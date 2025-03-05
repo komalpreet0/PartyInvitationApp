@@ -19,7 +19,8 @@ namespace PartyInvitationApp.Controllers
         // List all parties
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Parties.Include(p => p.Invitations).ToListAsync());
+            var parties = await _context.Parties.Include(p => p.Invitations).ToListAsync();
+            return View(parties);
         }
 
         // Display form to create a new party
@@ -33,9 +34,7 @@ namespace PartyInvitationApp.Controllers
         public async Task<IActionResult> Create(Party party)
         {
             if (!ModelState.IsValid)
-            {
                 return View(party);
-            }
 
             _context.Parties.Add(party);
             await _context.SaveChangesAsync();
@@ -56,34 +55,18 @@ namespace PartyInvitationApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Party party)
         {
-            if (id != party.Id)
+            if (id != party.PartyId)
                 return NotFound();
 
             if (!ModelState.IsValid)
-            {
                 return View(party);
-            }
 
             _context.Update(party);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        // View details and manage a party
-        public async Task<IActionResult> Manage(int id)
-        {
-            var party = await _context.Parties
-                .Include(p => p.Invitations)
-                .FirstOrDefaultAsync(p => p.Id == id);
-
-            if (party == null)
-                return NotFound();
-
-            return View(party);
-        }
-
         // Delete a party
-        [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
             var party = await _context.Parties.FindAsync(id);
@@ -92,8 +75,17 @@ namespace PartyInvitationApp.Controllers
 
             _context.Parties.Remove(party);
             await _context.SaveChangesAsync();
-
             return RedirectToAction(nameof(Index));
+        }
+
+        // View details and manage a party
+        public async Task<IActionResult> Manage(int id)
+        {
+            var party = await _context.Parties.Include(p => p.Invitations).FirstOrDefaultAsync(p => p.PartyId == id);
+            if (party == null)
+                return NotFound();
+
+            return View(party);
         }
     }
 }
