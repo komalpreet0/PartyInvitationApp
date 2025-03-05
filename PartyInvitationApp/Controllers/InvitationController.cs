@@ -58,7 +58,8 @@ namespace PartyInvitationApp.Controllers
             if (invitation == null)
                 return NotFound();
 
-            return View(invitation);
+            return View("Response", invitation);
+            
         }
 
         // Handle RSVP submission
