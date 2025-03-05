@@ -20,12 +20,14 @@ namespace PartyInvitationApp.Services
             {
                 var emailSettings = configuration.GetSection("EmailSettings");
 
-                // Ensure no null values are assigned
+                // Ensure required values are not null
                 _smtpServer = emailSettings["SmtpServer"] ?? throw new ArgumentNullException("SmtpServer is missing in configuration.");
                 _smtpPort = int.TryParse(emailSettings["SmtpPort"], out int port) ? port : throw new ArgumentNullException("SmtpPort is invalid.");
                 _senderEmail = emailSettings["SenderEmail"] ?? throw new ArgumentNullException("SenderEmail is missing in configuration.");
                 _senderPassword = emailSettings["SenderPassword"] ?? throw new ArgumentNullException("SenderPassword is missing in configuration.");
                 _enableSsl = bool.TryParse(emailSettings["EnableSsl"], out bool ssl) ? ssl : throw new ArgumentNullException("EnableSsl is invalid.");
+
+                Console.WriteLine($"📩 Email Settings Loaded Successfully!");
             }
             catch (Exception ex)
             {
@@ -38,7 +40,7 @@ namespace PartyInvitationApp.Services
         {
             try
             {
-                Console.WriteLine("📤 Sending email...");
+                Console.WriteLine("📤 Preparing to send email...");
                 Console.WriteLine($"SMTP Server: {_smtpServer}, Port: {_smtpPort}, SSL: {_enableSsl}");
                 Console.WriteLine($"From: {_senderEmail} -> To: {toEmail}");
 
@@ -46,6 +48,8 @@ namespace PartyInvitationApp.Services
                 {
                     client.Credentials = new NetworkCredential(_senderEmail, _senderPassword);
                     client.EnableSsl = _enableSsl;
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.UseDefaultCredentials = false; // Ensures credentials are used
 
                     var mailMessage = new MailMessage
                     {

@@ -28,7 +28,7 @@ namespace PartyInvitationApp.Controllers
                 GuestName = guestName,
                 GuestEmail = guestEmail,
                 PartyId = partyId,
-                Status = InvitationStatus.InviteSent
+                Status = InvitationStatus.InviteNotSent  
             };
 
             _context.Invitations.Add(invitation);
@@ -63,6 +63,15 @@ namespace PartyInvitationApp.Controllers
             if (invitation == null)
                 return NotFound();
 
+            if (response == "Yes")
+                invitation.Status = InvitationStatus.RespondedYes;
+            else if (response == "No")
+                invitation.Status = InvitationStatus.RespondedNo;
+            else
+                invitation.Status = InvitationStatus.InviteNotSent;  // Ensure status is correctly updated
+
+            _context.Update(invitation);
+            await _context.SaveChangesAsync();
             invitation.Status = response == "Yes" ? InvitationStatus.RespondedYes : InvitationStatus.RespondedNo;
             _context.Update(invitation);
             await _context.SaveChangesAsync();
