@@ -28,17 +28,22 @@ namespace PartyInvitationApp.Controllers
                 GuestName = guestName,
                 GuestEmail = guestEmail,
                 PartyId = partyId,
-                Status = InvitationStatus.InviteNotSent  
+                Status = InvitationStatus.InviteNotSent  // Initially marked as Not Sent
             };
 
             _context.Invitations.Add(invitation);
             await _context.SaveChangesAsync();
 
-            // Send the invitation email
+            // Update status to "InviteSent" after saving
+            invitation.Status = InvitationStatus.InviteSent;
+            _context.Update(invitation);
+            await _context.SaveChangesAsync();
+
+            // Send the invitation email with RSVP link
             string subject = $"You're Invited to {partyId}!";
             string body = $"Hello {guestName},<br/>" +
-                          $"You've been invited to an event! Please RSVP here: " +
-                          $"<a href='https://yourwebsite.com/Invitation/Respond/{invitation.InvitationId}'>Click here to respond</a>";
+                          $"You've been invited to an event! Please RSVP below:<br/><br/>" +
+                          $"<a href='https://localhost:7008/Invitation/Respond/{invitation.InvitationId}'>Click here to RSVP</a>";
 
             await _emailService.SendInvitationEmail(guestEmail, subject, body);
 
@@ -46,6 +51,7 @@ namespace PartyInvitationApp.Controllers
         }
 
         // RSVP response page
+        [HttpGet]
         public async Task<IActionResult> Respond(int id)
         {
             var invitation = await _context.Invitations.FindAsync(id);
@@ -63,16 +69,12 @@ namespace PartyInvitationApp.Controllers
             if (invitation == null)
                 return NotFound();
 
+            // Update status based on response
             if (response == "Yes")
                 invitation.Status = InvitationStatus.RespondedYes;
             else if (response == "No")
                 invitation.Status = InvitationStatus.RespondedNo;
-            else
-                invitation.Status = InvitationStatus.InviteNotSent;  // Ensure status is correctly updated
 
-            _context.Update(invitation);
-            await _context.SaveChangesAsync();
-            invitation.Status = response == "Yes" ? InvitationStatus.RespondedYes : InvitationStatus.RespondedNo;
             _context.Update(invitation);
             await _context.SaveChangesAsync();
 

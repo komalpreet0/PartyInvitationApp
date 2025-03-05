@@ -8,7 +8,7 @@
 
 <p>You have been invited to an event! Please confirm your attendance.</p>
 
-<form method="post" action="/Invitation/Respond">
+<form method="post" asp-action="Respond" asp-controller="Invitation">
     <input type="hidden" name="id" value="@Model.InvitationId" />
 
     <div class="form-check">
