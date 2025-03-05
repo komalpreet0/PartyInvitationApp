@@ -12,9 +12,18 @@ namespace PartyInvitationApp.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Convert enum values to string in DB
             modelBuilder.Entity<Invitation>()
                 .Property(inv => inv.Status)
                 .HasConversion<string>();
+
+            // Define relationships
+            modelBuilder.Entity<Party>()
+                .HasMany(p => p.Invitations)
+                .WithOne(i => i.Party)
+                .HasForeignKey(i => i.PartyId);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
