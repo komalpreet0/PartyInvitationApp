@@ -5,16 +5,16 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PartyInvitationApp.Data
+namespace PartyInvitationApp.Services
 {
     public static class DataSeeder
     {
         public static async Task SeedData(IServiceProvider serviceProvider)
         {
-            using var context = new ApplicationDbContext(
-                serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
+            using var context = new PartyInvitationApp.Data.ApplicationDbContext(
+                serviceProvider.GetRequiredService<DbContextOptions<PartyInvitationApp.Data.ApplicationDbContext>>());
 
-            // Check if there is already data
+            // Check if database already has data
             if (!context.Parties.Any())
             {
                 var sampleParty = new Party

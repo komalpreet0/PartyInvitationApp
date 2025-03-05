@@ -36,7 +36,7 @@ namespace PartyInvitationApp.Controllers
             {
                 _context.Parties.Add(party);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index)); // Redirect to the party list
+                return RedirectToAction(nameof(Index));
             }
             return View(party);
         }
