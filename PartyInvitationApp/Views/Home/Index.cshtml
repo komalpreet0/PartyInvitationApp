@@ -1,20 +1,42 @@
 ﻿@model IEnumerable<PartyInvitationApp.Models.Party>
 
+@{
+    ViewData["Title"] = "All Parties";
+}
+
 <h2>All Parties</h2>
+
 <a href="/Party/Create" class="btn btn-primary">Add New Party</a>
 
-<table class="table">
-    <tr><th>Description</th><th>Date</th><th>Location</th><th>Actions</th></tr>
-    @foreach (var party in Model)
-    {
-        <tr>
-            <td>@party.Description</td>
-            <td>@party.EventDate.ToShortDateString()</td>
-            <td>@party.Location</td>
-            <td>
-                <a href="/Party/Manage/@party.PartyId" class="btn btn-info">Manage</a>
-                <a href="/Party/Edit/@party.PartyId" class="btn btn-warning">Edit</a>
-            </td>
-        </tr>
-    }
-</table>
+@if (Model != null && Model.Any())  // ✅ Check if Model is null or empty
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Location</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var party in Model)
+            {
+                <tr>
+                    <td>@party.Description</td>
+                    <td>@party.EventDate.ToShortDateString()</td>
+                    <td>@party.Location</td>
+                    <td>
+                        <a href="/Party/Manage/@party.PartyId" class="btn btn-info">Manage</a>
+                        <a href="/Party/Edit/@party.PartyId" class="btn btn-warning">Edit</a>
+                        <a href="/Party/Delete/@party.PartyId" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No parties available.</p>
+}

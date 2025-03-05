@@ -20,7 +20,7 @@ namespace PartyInvitationApp.Controllers
         public async Task<IActionResult> Index()
         {
             var parties = await _context.Parties.Include(p => p.Invitations).ToListAsync();
-            return View(parties);
+            return View(parties ?? new List<Party>()); // ✅ Ensure model is not null
         }
 
         // Display form to create a new party
