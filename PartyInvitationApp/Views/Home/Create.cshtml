@@ -1,0 +1,25 @@
+﻿@model PartyInvitationApp.Models.Invitation
+
+@{
+    ViewData["Title"] = "Send Invitation";
+}
+
+<h2 class="mt-4">Send Invitation</h2>
+
+<form method="post" action="/Invitation/SendInvitation">
+    <input type="hidden" name="partyId" value="@Model.PartyId" />
+
+    <div class="mb-3">
+        <label class="form-label">Guest Name:</label>
+        <input type="text" name="guestName" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Guest Email:</label>
+        <input type="email" name="guestEmail" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Send Invitation</button>
+</form>
+
+<a href="/Party/Manage/@Model.PartyId" class="btn btn-secondary mt-3">Back to Manage</a>

@@ -1,8 +1,20 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<PartyInvitationApp.Models.Party>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>All Parties</h2>
+<a href="/Party/Create" class="btn btn-primary">Add New Party</a>
+
+<table class="table">
+    <tr><th>Description</th><th>Date</th><th>Location</th><th>Actions</th></tr>
+    @foreach (var party in Model)
+    {
+        <tr>
+            <td>@party.Description</td>
+            <td>@party.EventDate.ToShortDateString()</td>
+            <td>@party.Location</td>
+            <td>
+                <a href="/Party/Manage/@party.PartyId" class="btn btn-info">Manage</a>
+                <a href="/Party/Edit/@party.PartyId" class="btn btn-warning">Edit</a>
+            </td>
+        </tr>
+    }
+</table>

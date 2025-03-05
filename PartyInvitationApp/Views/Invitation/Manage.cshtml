@@ -1,0 +1,29 @@
+﻿@model PartyInvitationApp.Models.Party
+
+@{
+    ViewData["Title"] = "Manage Invitations";
+}
+
+<h2 class="mt-4">Manage Invitations for: @Model.Description</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Guest Name</th>
+            <th>Email</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var invitation in Model.Invitations)
+        {
+            <tr>
+                <td>@invitation.GuestName</td>
+                <td>@invitation.GuestEmail</td>
+                <td>@invitation.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="/Party/Index" class="btn btn-secondary mt-3">Back to Parties</a>

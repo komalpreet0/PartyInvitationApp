@@ -1,4 +1,25 @@
-﻿@page
-@model PartyInvitationApp.Views.Invitation.ResponseModel
+﻿@model PartyInvitationApp.Models.Invitation
+
 @{
+    ViewData["Title"] = "RSVP";
 }
+
+<h2 class="mt-4">RSVP for @Model.GuestName</h2>
+
+<p>You have been invited to an event! Please confirm your attendance.</p>
+
+<form method="post" action="/Invitation/Respond">
+    <input type="hidden" name="id" value="@Model.InvitationId" />
+
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="response" value="Yes" required />
+        <label class="form-check-label">Yes, I will attend</label>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="response" value="No" required />
+        <label class="form-check-label">No, I can't attend</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Submit Response</button>
+</form>

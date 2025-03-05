@@ -1,4 +1,33 @@
-﻿@page
-@model PartyInvitationApp.Views.Party.IndexModel
+﻿@model IEnumerable<PartyInvitationApp.Models.Party>
+
 @{
+    ViewData["Title"] = "All Parties";
 }
+
+<h2 class="mt-4">All Parties</h2>
+<a href="/Party/Create" class="btn btn-primary mb-3">Add New Party</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var party in Model)
+        {
+            <tr>
+                <td>@party.Description</td>
+                <td>@party.EventDate.ToShortDateString()</td>
+                <td>@party.Location</td>
+                <td>
+                    <a href="/Party/Manage/@party.PartyId" class="btn btn-info btn-sm">Manage</a>
+                    <a href="/Party/Edit/@party.PartyId" class="btn btn-warning btn-sm">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
