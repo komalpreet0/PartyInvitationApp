@@ -20,9 +20,9 @@
                 <td>@party.EventDate.ToShortDateString()</td>
                 <td>@party.Location</td>
                 <td>
-                    <a href="/Party/Manage/@party.Id" class="btn btn-info btn-sm">Manage</a>
-                    <a href="/Party/Edit/@party.Id" class="btn btn-warning btn-sm">Edit</a>
-                    <form asp-action="Delete" asp-route-id="@party.Id" method="post" style="display:inline;">
+                    <a href="/Party/Manage/@party.PartyId" class="btn btn-info btn-sm">Manage</a>
+                    <a href="/Party/Edit/@party.PartyId" class="btn btn-warning btn-sm">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@party.PartyId" method="post" style="display:inline;">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                 </td>

@@ -6,9 +6,9 @@ namespace PartyInvitationApp.Models
 {
     public class Party
     {
-        [Key]  // This marks PartyId as the primary key
+        [Key]  // Primary Key
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int PartyId { get; set; }
+        public int PartyId { get; set; }  // ✅ Ensure PartyId exists
 
         [Required]
         public string Description { get; set; } = string.Empty;

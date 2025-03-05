@@ -1,44 +1,34 @@
 ﻿using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace PartyInvitationApp.Services
 {
     public class EmailService
     {
         private readonly string _smtpServer;
-        private readonly int _port;
         private readonly string _senderEmail;
         private readonly string _senderPassword;
+        private readonly int _smtpPort;
 
-        public EmailService(IConfiguration configuration)
+        public EmailService()
         {
-            _smtpServer = configuration["EmailSettings:SmtpServer"];
-            _port = int.Parse(configuration["EmailSettings:Port"]);
-            _senderEmail = configuration["EmailSettings:SenderEmail"];
-            _senderPassword = configuration["EmailSettings:SenderPassword"];
+            _smtpServer = "smtp.example.com"; // Change to your SMTP server
+            _senderEmail = "your-email@example.com"; // Change to your email
+            _senderPassword = "yourpassword"; // Change to your password
+            _smtpPort = 587; // Change if necessary
         }
 
-        public async Task SendInvitationEmail(string recipientEmail, string subject, string body)
+        public async Task SendInvitationEmail(string toEmail, string subject, string body)
         {
-            var smtpClient = new SmtpClient(_smtpServer)
+            using (var client = new SmtpClient(_smtpServer, _smtpPort))
             {
-                Port = _port,
-                Credentials = new NetworkCredential(_senderEmail, _senderPassword),
-                EnableSsl = true
-            };
+                client.Credentials = new NetworkCredential(_senderEmail, _senderPassword);
+                client.EnableSsl = true;
 
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress(_senderEmail),
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = true
-            };
-            mailMessage.To.Add(recipientEmail);
-
-            await smtpClient.SendMailAsync(mailMessage);
+                var message = new MailMessage(_senderEmail, toEmail, subject, body);
+                message.IsBodyHtml = true;
+                await client.SendMailAsync(message);
+            }
         }
     }
 }
