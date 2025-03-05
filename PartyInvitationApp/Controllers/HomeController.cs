@@ -1,32 +1,28 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PartyInvitationApp.Models;
-using System.Diagnostics;
+using System;
 
 namespace PartyInvitationApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
-            return View();
-        }
+            
+            if (Request.Cookies["FirstVisit"] == null)
+            {
+                Response.Cookies.Append("FirstVisit", DateTime.Now.ToString(), new CookieOptions
+                {
+                    Expires = DateTime.Now.AddYears(1) 
+                });
+                ViewBag.FirstVisitMessage = "Welcome! This is your first time using the app.";
+            }
+            else
+            {
+                ViewBag.FirstVisitMessage = $"Welcome back! You first visited on {Request.Cookies["FirstVisit"]}.";
+            }
 
-        public IActionResult Privacy()
-        {
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
