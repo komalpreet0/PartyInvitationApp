@@ -19,24 +19,13 @@ namespace PartyInvitationApp.Controllers
             _emailService = emailService;
         }
 
-        // 📌 List all invitations for a specific party
-        public async Task<IActionResult> Index(int partyId)
-        {
-            var invitations = await _context.Invitations
-                .Where(i => i.PartyId == partyId)
-                .ToListAsync();
-
-            ViewBag.PartyId = partyId; // Pass PartyId to the view for navigation
-            return View(invitations);
-        }
-
-        // 📌 Send an email invitation
+        // Send an email invitation
         [HttpPost]
         public async Task<IActionResult> SendInvitation(int partyId, string guestName, string guestEmail)
         {
             if (string.IsNullOrEmpty(guestName) || string.IsNullOrEmpty(guestEmail))
             {
-                ModelState.AddModelError("", "Guest Name and Email are required.");
+                ModelState.AddModelError(string.Empty, "Guest name and email are required.");
                 return RedirectToAction("Manage", "Party", new { id = partyId });
             }
 
@@ -45,24 +34,29 @@ namespace PartyInvitationApp.Controllers
                 GuestName = guestName,
                 GuestEmail = guestEmail,
                 PartyId = partyId,
-                Status = InvitationStatus.InvitationSent
+                Status = InvitationStatus.InviteNotSent
             };
 
             _context.Invitations.Add(invitation);
             await _context.SaveChangesAsync();
 
-            // ✅ Send the invitation email
-            string subject = $"You're Invited to the Party!";
+            // Send the invitation email
+            string subject = $"You're Invited to a Party!";
             string body = $"Hello {guestName},<br/>" +
-                          $"You've been invited to an event! Please RSVP here: " +
+                          $"You've been invited to a party! Please RSVP here: " +
                           $"<a href='https://localhost:7008/Invitation/Respond/{invitation.Id}'>Click here to respond</a>";
 
             await _emailService.SendInvitationEmail(guestEmail, subject, body);
 
+            // Update status to 'InvitationSent'
+            invitation.Status = InvitationStatus.InvitationSent;
+            _context.Update(invitation);
+            await _context.SaveChangesAsync();
+
             return RedirectToAction("Manage", "Party", new { id = partyId });
         }
 
-        // 📌 Display RSVP response page
+        // RSVP response page
         public async Task<IActionResult> Respond(int id)
         {
             var invitation = await _context.Invitations.FindAsync(id);
@@ -72,7 +66,7 @@ namespace PartyInvitationApp.Controllers
             return View(invitation);
         }
 
-        // 📌 Handle RSVP submission
+        // Handle RSVP submission
         [HttpPost]
         public async Task<IActionResult> Respond(int id, string response)
         {
@@ -91,7 +85,7 @@ namespace PartyInvitationApp.Controllers
             return RedirectToAction("Manage", "Party", new { id = invitation.PartyId });
         }
 
-        // 📌 Delete an invitation
+        // Delete an invitation
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {

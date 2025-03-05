@@ -16,20 +16,19 @@ namespace PartyInvitationApp.Controllers
             _context = context;
         }
 
-        // 📌 List all parties
+        // List all parties
         public async Task<IActionResult> Index()
         {
-            var parties = await _context.Parties.Include(p => p.Invitations).ToListAsync();
-            return View(parties);
+            return View(await _context.Parties.Include(p => p.Invitations).ToListAsync());
         }
 
-        // 📌 Display form to create a new party
+        // Display form to create a new party
         public IActionResult Create()
         {
             return View();
         }
 
-        // 📌 Handle party creation
+        // Handle party creation
         [HttpPost]
         public async Task<IActionResult> Create(Party party)
         {
@@ -43,26 +42,22 @@ namespace PartyInvitationApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // 📌 Display form to edit an existing party
+        // Display form to edit an existing party
         public async Task<IActionResult> Edit(int id)
         {
             var party = await _context.Parties.FindAsync(id);
             if (party == null)
-            {
                 return NotFound();
-            }
 
             return View(party);
         }
 
-        // 📌 Handle party editing
+        // Handle party editing
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Party party)
         {
             if (id != party.Id)
-            {
                 return NotFound();
-            }
 
             if (!ModelState.IsValid)
             {
@@ -74,7 +69,7 @@ namespace PartyInvitationApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // 📌 View details and manage a party (including invitations)
+        // View details and manage a party
         public async Task<IActionResult> Manage(int id)
         {
             var party = await _context.Parties
@@ -82,25 +77,22 @@ namespace PartyInvitationApp.Controllers
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (party == null)
-            {
                 return NotFound();
-            }
 
             return View(party);
         }
 
-        // 📌 Delete a party
+        // Delete a party
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
             var party = await _context.Parties.FindAsync(id);
             if (party == null)
-            {
                 return NotFound();
-            }
 
             _context.Parties.Remove(party);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
     }

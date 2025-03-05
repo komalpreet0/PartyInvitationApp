@@ -6,28 +6,22 @@ namespace PartyInvitationApp.Models
     public class Invitation
     {
         [Key]
-        public int Id { get; set; } // ✅ Ensure primary key exists
+        public int Id { get; set; } // ✅ Changed from InvitationId to Id
 
         [Required]
-        public string GuestName { get; set; } = string.Empty;
+        public string GuestName { get; set; }
 
         [Required]
         [EmailAddress]
-        public string GuestEmail { get; set; } = string.Empty;
+        public string GuestEmail { get; set; }
 
-        // ✅ Ensure PartyId and Status exist
-        [ForeignKey("Party")]
-        public int PartyId { get; set; }
-        public Party Party { get; set; } = null!;
-
+        [Required]
         public InvitationStatus Status { get; set; } = InvitationStatus.InviteNotSent;
-    }
 
-    public enum InvitationStatus
-    {
-        InviteNotSent,
-        InviteSent,
-        RespondedYes,
-        RespondedNo
+        // Foreign Key linking to Party
+        [ForeignKey("Party")]
+        public int PartyId { get; set; } // ✅ Fixed PartyId definition
+
+        public Party Party { get; set; } // ✅ Navigation Property
     }
 }

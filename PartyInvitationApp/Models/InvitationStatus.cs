@@ -2,7 +2,7 @@
 {
     public enum InvitationStatus
     {
-        InvitationNotSent,  
+        InviteNotSent,
         InvitationSent,
         RespondedYes,
         RespondedNo

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PartyInvitationApp.Models
@@ -7,18 +6,18 @@ namespace PartyInvitationApp.Models
     public class Party
     {
         [Key]
-        public int Id { get; set; } // ✅ Ensure primary key exists
+        public int Id { get; set; } // ✅ Changed from PartyId to Id
 
         [Required]
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; set; }
 
         [Required]
         public DateTime EventDate { get; set; }
 
         [Required]
-        public string Location { get; set; } = string.Empty;
+        public string Location { get; set; }
 
-        // ✅ Ensure it has an Invitation list
+        // Relationship: A Party can have multiple Invitations
         public List<Invitation> Invitations { get; set; } = new List<Invitation>();
     }
 }
