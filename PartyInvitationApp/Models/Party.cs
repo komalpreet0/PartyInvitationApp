@@ -6,21 +6,17 @@ namespace PartyInvitationApp.Models
 {
     public class Party
     {
-        [Key]
-        public int PartyId { get; set; }
+        public int Id { get; set; }
 
-        [Required(ErrorMessage = "Description is required")]
-        [StringLength(200, ErrorMessage = "Description cannot exceed 200 characters")]
-        public string Description { get; set; }
+        [Required]
+        public string Description { get; set; } = string.Empty; // FIX: Provide default value
 
-        [Required(ErrorMessage = "Event date is required")]
+        [Required]
         public DateTime EventDate { get; set; }
 
-        [Required(ErrorMessage = "Location is required")]
-        [StringLength(100, ErrorMessage = "Location cannot exceed 100 characters")]
-        public string Location { get; set; }
+        [Required]
+        public string Location { get; set; } = string.Empty; // FIX: Provide default value
 
-        // Navigation property for related invitations
-        public List<Invitation> Invitations { get; set; } = new List<Invitation>();
+        public List<Invitation> Invitations { get; set; } = new List<Invitation>(); // FIX: Initialize List
     }
 }

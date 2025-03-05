@@ -5,23 +5,16 @@ namespace PartyInvitationApp.Models
 {
     public class Invitation
     {
-        [Key]
-        public int InvitationId { get; set; }
-
-        [Required(ErrorMessage = "Guest name is required")]
-        [StringLength(100, ErrorMessage = "Guest name cannot exceed 100 characters")]
-        public string GuestName { get; set; }
-
-        [Required(ErrorMessage = "Guest email is required")]
-        [EmailAddress(ErrorMessage = "Invalid email format")]
-        public string GuestEmail { get; set; }
+        public int Id { get; set; }
 
         [Required]
-        public InvitationStatus Status { get; set; } = InvitationStatus.InvitationNotSent;
+        public string GuestName { get; set; } = string.Empty; // FIX: Initialize with default value
 
-        // Foreign key linking invitation to a party
-        [ForeignKey("Party")]
+        [Required]
+        [EmailAddress]
+        public string GuestEmail { get; set; } = string.Empty; // FIX: Initialize with default value
+
         public int PartyId { get; set; }
-        public Party Party { get; set; }
+        public Party Party { get; set; } = null!; // FIX: Use "null!" to indicate non-null value
     }
 }
