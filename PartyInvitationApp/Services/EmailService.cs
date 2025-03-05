@@ -1,15 +1,24 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace PartyInvitationApp.Services
 {
     public class EmailService
     {
-        private readonly string _smtpServer = "smtp.gmail.com";
-        private readonly int _port = 587;
-        private readonly string _senderEmail = "your-email@gmail.com";
-        private readonly string _senderPassword = "your-app-password";
+        private readonly string _smtpServer;
+        private readonly int _port;
+        private readonly string _senderEmail;
+        private readonly string _senderPassword;
+
+        public EmailService(IConfiguration configuration)
+        {
+            _smtpServer = configuration["EmailSettings:SmtpServer"];
+            _port = int.Parse(configuration["EmailSettings:Port"]);
+            _senderEmail = configuration["EmailSettings:SenderEmail"];
+            _senderPassword = configuration["EmailSettings:SenderPassword"];
+        }
 
         public async Task SendInvitationEmail(string recipientEmail, string subject, string body)
         {
