@@ -1,10 +1,10 @@
-﻿using PartyInvitationApp.Models;
-using System;
+﻿using System;
 using System.Linq;
+using PartyInvitationApp.Models;
 
 namespace PartyInvitationApp.Data
 {
-    public class DataSeeder
+    public static class DataSeeder
     {
         public static void Seed(ApplicationDbContext context)
         {
@@ -12,16 +12,21 @@ namespace PartyInvitationApp.Data
             {
                 var party = new Party
                 {
-                    Description = "New Year Party",
-                    EventDate = DateTime.Now.AddMonths(1),
-                    Location = "Toronto",
-                    Invitations = new()
-                    {
-                        new Invitation { GuestName = "John Doe", GuestEmail = "john@example.com", Status = InvitationStatus.InviteNotSent },
-                        new Invitation { GuestName = "Jane Doe", GuestEmail = "jane@example.com", Status = InvitationStatus.InviteNotSent }
-                    }
+                    Description = "Birthday Party",
+                    EventDate = DateTime.Now.AddDays(10),
+                    Location = "123 Party Street"
                 };
                 context.Parties.Add(party);
+                context.SaveChanges();
+
+                var invitation = new Invitation
+                {
+                    GuestName = "John Doe",
+                    GuestEmail = "john@example.com",
+                    Status = InvitationStatus.InviteNotSent,  // ✅ Fixed Enum Issue
+                    PartyId = party.PartyId
+                };
+                context.Invitations.Add(invitation);
                 context.SaveChanges();
             }
         }

@@ -3,7 +3,7 @@
     public enum InvitationStatus
     {
         InviteNotSent,
-        InvitationSent,
+        InviteSent,
         RespondedYes,
         RespondedNo
     }

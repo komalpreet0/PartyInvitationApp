@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PartyInvitationApp.Models
 {
     public class Party
     {
-        [Key]
+        [Key]  // This marks PartyId as the primary key
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PartyId { get; set; }
 
         [Required]
@@ -18,6 +19,6 @@ namespace PartyInvitationApp.Models
         [Required]
         public string Location { get; set; } = string.Empty;
 
-        public List<Invitation> Invitations { get; set; } = new();
+        public ICollection<Invitation> Invitations { get; set; } = new List<Invitation>();
     }
 }
