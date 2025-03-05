@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
@@ -15,31 +16,59 @@ namespace PartyInvitationApp.Services
 
         public EmailService(IConfiguration configuration)
         {
-            var emailSettings = configuration.GetSection("EmailSettings");
-            _smtpServer = emailSettings["SmtpServer"];
-            _smtpPort = int.Parse(emailSettings["SmtpPort"]);
-            _senderEmail = emailSettings["SenderEmail"];
-            _senderPassword = emailSettings["SenderPassword"];
-            _enableSsl = bool.Parse(emailSettings["EnableSsl"]);
+            try
+            {
+                var emailSettings = configuration.GetSection("EmailSettings");
+
+                // Ensure no null values are assigned
+                _smtpServer = emailSettings["SmtpServer"] ?? throw new ArgumentNullException("SmtpServer is missing in configuration.");
+                _smtpPort = int.TryParse(emailSettings["SmtpPort"], out int port) ? port : throw new ArgumentNullException("SmtpPort is invalid.");
+                _senderEmail = emailSettings["SenderEmail"] ?? throw new ArgumentNullException("SenderEmail is missing in configuration.");
+                _senderPassword = emailSettings["SenderPassword"] ?? throw new ArgumentNullException("SenderPassword is missing in configuration.");
+                _enableSsl = bool.TryParse(emailSettings["EnableSsl"], out bool ssl) ? ssl : throw new ArgumentNullException("EnableSsl is invalid.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error loading email settings: {ex.Message}");
+                throw; // Stop execution if email settings are incorrect
+            }
         }
 
         public async Task SendInvitationEmail(string toEmail, string subject, string body)
         {
-            using (var client = new SmtpClient(_smtpServer, _smtpPort))
+            try
             {
-                client.Credentials = new NetworkCredential(_senderEmail, _senderPassword);
-                client.EnableSsl = _enableSsl;
+                Console.WriteLine("📤 Sending email...");
+                Console.WriteLine($"SMTP Server: {_smtpServer}, Port: {_smtpPort}, SSL: {_enableSsl}");
+                Console.WriteLine($"From: {_senderEmail} -> To: {toEmail}");
 
-                var mailMessage = new MailMessage
+                using (var client = new SmtpClient(_smtpServer, _smtpPort))
                 {
-                    From = new MailAddress(_senderEmail),
-                    Subject = subject,
-                    Body = body,
-                    IsBodyHtml = true
-                };
-                mailMessage.To.Add(toEmail);
+                    client.Credentials = new NetworkCredential(_senderEmail, _senderPassword);
+                    client.EnableSsl = _enableSsl;
 
-                await client.SendMailAsync(mailMessage);
+                    var mailMessage = new MailMessage
+                    {
+                        From = new MailAddress(_senderEmail),
+                        Subject = subject,
+                        Body = body,
+                        IsBodyHtml = true
+                    };
+                    mailMessage.To.Add(toEmail);
+
+                    await client.SendMailAsync(mailMessage);
+                    Console.WriteLine("✅ Email successfully sent!");
+                }
+            }
+            catch (SmtpException smtpEx)
+            {
+                Console.WriteLine($"❌ SMTP Error: {smtpEx.Message}");
+                if (smtpEx.InnerException != null)
+                    Console.WriteLine($"➡ Inner Exception: {smtpEx.InnerException.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Email sending failed: {ex.Message}");
             }
         }
     }
