@@ -20,19 +20,19 @@ namespace PartyInvitationApp.Services
             {
                 var emailSettings = configuration.GetSection("EmailSettings");
 
-                // Ensure required values are not null
+                // For ensuring required values are not null
                 _smtpServer = emailSettings["SmtpServer"] ?? throw new ArgumentNullException("SmtpServer is missing in configuration.");
                 _smtpPort = int.TryParse(emailSettings["SmtpPort"], out int port) ? port : throw new ArgumentNullException("SmtpPort is invalid.");
                 _senderEmail = emailSettings["SenderEmail"] ?? throw new ArgumentNullException("SenderEmail is missing in configuration.");
                 _senderPassword = emailSettings["SenderPassword"] ?? throw new ArgumentNullException("SenderPassword is missing in configuration.");
                 _enableSsl = bool.TryParse(emailSettings["EnableSsl"], out bool ssl) ? ssl : throw new ArgumentNullException("EnableSsl is invalid.");
 
-                Console.WriteLine($"📩 Email Settings Loaded Successfully!");
+                Console.WriteLine($"Email Settings Loaded Successfully!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Error loading email settings: {ex.Message}");
-                throw; // Stop execution if email settings are incorrect
+                Console.WriteLine($"Error loading email settings: {ex.Message}");
+                throw; // For stoping execution if email settings are incorrect
             }
         }
 
@@ -40,7 +40,7 @@ namespace PartyInvitationApp.Services
         {
             try
             {
-                Console.WriteLine("📤 Preparing to send email...");
+                Console.WriteLine("Preparing to send email...");
                 Console.WriteLine($"SMTP Server: {_smtpServer}, Port: {_smtpPort}, SSL: {_enableSsl}");
                 Console.WriteLine($"From: {_senderEmail} -> To: {toEmail}");
 
@@ -49,7 +49,7 @@ namespace PartyInvitationApp.Services
                     client.Credentials = new NetworkCredential(_senderEmail, _senderPassword);
                     client.EnableSsl = _enableSsl;
                     client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    client.UseDefaultCredentials = false; // Ensures credentials are used
+                    client.UseDefaultCredentials = false; // For ensuring credentials are used
 
                     var mailMessage = new MailMessage
                     {
@@ -61,18 +61,18 @@ namespace PartyInvitationApp.Services
                     mailMessage.To.Add(toEmail);
 
                     await client.SendMailAsync(mailMessage);
-                    Console.WriteLine("✅ Email successfully sent!");
+                    Console.WriteLine(" Email successfully sent!");
                 }
             }
             catch (SmtpException smtpEx)
             {
-                Console.WriteLine($"❌ SMTP Error: {smtpEx.Message}");
+                Console.WriteLine($"SMTP Error: {smtpEx.Message}");
                 if (smtpEx.InnerException != null)
-                    Console.WriteLine($"➡ Inner Exception: {smtpEx.InnerException.Message}");
+                    Console.WriteLine($"Inner Exception: {smtpEx.InnerException.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Email sending failed: {ex.Message}");
+                Console.WriteLine($"Email sending failed: {ex.Message}");
             }
         }
     }

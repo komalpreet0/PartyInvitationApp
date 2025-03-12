@@ -19,7 +19,7 @@ namespace PartyInvitationApp.Controllers
             _emailService = emailService;
         }
 
-        // Send an email invitation
+        // For Sending an email invitation
         [HttpPost]
         public async Task<IActionResult> SendInvitation(int partyId, string guestName, string guestEmail)
         {
@@ -28,19 +28,19 @@ namespace PartyInvitationApp.Controllers
                 GuestName = guestName,
                 GuestEmail = guestEmail,
                 PartyId = partyId,
-                Status = InvitationStatus.InviteNotSent  // Initially marked as Not Sent
+                Status = InvitationStatus.InviteNotSent  //It will mark as not sent in initial stage
             };
 
             _context.Invitations.Add(invitation);
             await _context.SaveChangesAsync();
 
-            // Update status to "InviteSent" after saving
+            // It will show "InviteSent" after Update status  
             invitation.Status = InvitationStatus.InviteSent;
             _context.Update(invitation);
             await _context.SaveChangesAsync();
 
-            // Send the invitation email with RSVP link
-            string subject = $"You're Invited to {partyId}!";
+            // It will send the invitation email with RSVP link
+            string subject = $"You're Invited to Birthday Party!";
             string body = $"Hello {guestName},<br/>" +
                           $"You've been invited to an event! Please RSVP below:<br/><br/>" +
                           $"<a href='https://localhost:7008/Invitation/Respond/{invitation.InvitationId}'>Click here to RSVP</a>";
@@ -50,7 +50,7 @@ namespace PartyInvitationApp.Controllers
             return RedirectToAction("Manage", "Party", new { id = partyId });
         }
 
-        // RSVP response page
+        // For RSVP response page 
         [HttpGet]
         public async Task<IActionResult> Respond(int id)
         {
@@ -62,7 +62,7 @@ namespace PartyInvitationApp.Controllers
             
         }
 
-        // Handle RSVP submission
+        // For handling RSVP submission
         [HttpPost]
         public async Task<IActionResult> Respond(int id, string response)
         {
@@ -70,7 +70,7 @@ namespace PartyInvitationApp.Controllers
             if (invitation == null)
                 return NotFound();
 
-            // Update status based on response
+            // For updating status based on response
             if (response == "Yes")
                 invitation.Status = InvitationStatus.RespondedYes;
             else if (response == "No")

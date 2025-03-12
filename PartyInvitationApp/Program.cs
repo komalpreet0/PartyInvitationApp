@@ -11,25 +11,25 @@ using System;
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
-// ✅ Configure SQL Server LocalDB
+// FOr Configuring SQL Server LocalDB
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
 
-// ✅ Add services to the container
+//For add services to the container
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.AddScoped<EmailService>(); // Use Scoped instead of Transient for better lifecycle management
+builder.Services.AddScoped<EmailService>(); 
 
 var app = builder.Build();
 
-// ✅ Apply Migrations Automatically for SQL Server LocalDB
+// To Apply Migrations Automatically for SQL Server LocalDB
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        context.Database.Migrate(); // Ensure database is updated
+        context.Database.Migrate(); // For ensuring database is updated
     }
     catch (Exception ex)
     {
@@ -37,7 +37,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// ✅ Configure the HTTP request pipeline
+// For configuring the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

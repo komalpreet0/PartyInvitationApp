@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PartyInvitationApp.Pages.InvitationResponses
 
-{
+{//for Response Model
     public class ResponseModel : PageModel
     {
         private readonly ApplicationDbContext _context;

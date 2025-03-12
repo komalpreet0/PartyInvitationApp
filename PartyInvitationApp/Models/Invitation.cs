@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PartyInvitationApp.Models
-{
+{// For Invitation details
     public class Invitation
     {
         [Key]
@@ -19,7 +19,7 @@ namespace PartyInvitationApp.Models
         [Required]
         public InvitationStatus Status { get; set; } = InvitationStatus.InviteNotSent;
 
-        // Foreign Key
+
         public int PartyId { get; set; }
         public Party Party { get; set; } = null!;
     }

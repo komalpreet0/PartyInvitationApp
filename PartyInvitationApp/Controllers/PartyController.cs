@@ -16,20 +16,20 @@ namespace PartyInvitationApp.Controllers
             _context = context;
         }
 
-        // List all parties
+        // For listing all parties
         public async Task<IActionResult> Index()
         {
             var parties = await _context.Parties.Include(p => p.Invitations).ToListAsync();
-            return View(parties ?? new List<Party>()); // ✅ Ensure model is not null
+            return View(parties ?? new List<Party>()); //For ensuring model is not null
         }
 
-        // Display form to create a new party
+        // For displaying form to create a new party
         public IActionResult Create()
         {
             return View();
         }
 
-        // Handle party creation
+        // For Handling party creation
         [HttpPost]
         public async Task<IActionResult> Create(Party party)
         {
@@ -41,7 +41,7 @@ namespace PartyInvitationApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Display form to edit an existing party
+        // FOr displaying form to edit an existing party
         public async Task<IActionResult> Edit(int id)
         {
             var party = await _context.Parties.FindAsync(id);
@@ -51,7 +51,7 @@ namespace PartyInvitationApp.Controllers
             return View(party);
         }
 
-        // Handle party editing
+        // For handling party editing
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Party party)
         {
@@ -66,7 +66,7 @@ namespace PartyInvitationApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Delete a party
+        // For deleting a party
         public async Task<IActionResult> Delete(int id)
         {
             var party = await _context.Parties.FindAsync(id);
@@ -78,7 +78,7 @@ namespace PartyInvitationApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // View details and manage a party
+        // For viewing details and manage a party
         public async Task<IActionResult> Manage(int id)
         {
             var party = await _context.Parties.Include(p => p.Invitations).FirstOrDefaultAsync(p => p.PartyId == id);

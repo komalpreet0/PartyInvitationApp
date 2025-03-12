@@ -4,7 +4,7 @@ using PartyInvitationApp.Data;
 using PartyInvitationApp.Models;
 using System.Threading.Tasks;
 using System.Linq;
-
+// For home controller
 namespace PartyInvitationApp.Controllers
 {
     public class HomeController : Controller
@@ -19,7 +19,7 @@ namespace PartyInvitationApp.Controllers
         public async Task<IActionResult> Index()
         {
             var parties = await _context.Parties.ToListAsync();
-            return View(parties ?? new List<Party>()); // ✅ Ensure model is not null
+            return View(parties ?? new List<Party>()); //For ensure model is not null
         }
     }
 }

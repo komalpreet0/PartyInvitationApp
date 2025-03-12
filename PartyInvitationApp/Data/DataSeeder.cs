@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using PartyInvitationApp.Models;
-
+// For data seeding
 namespace PartyInvitationApp.Data
 {
     public static class DataSeeder
@@ -13,7 +13,7 @@ namespace PartyInvitationApp.Data
                 var party = new Party
                 {
                     Description = "Birthday Party",
-                    EventDate = DateTime.Now.AddDays(10),
+                    EventDate = DateTime.Now.AddDays(10),//For date and time 
                     Location = "123 Party Street"
                 };
                 context.Parties.Add(party);
@@ -23,7 +23,7 @@ namespace PartyInvitationApp.Data
                 {
                     GuestName = "John Doe",
                     GuestEmail = "john@example.com",
-                    Status = InvitationStatus.InviteNotSent,  // ✅ Fixed Enum Issue
+                    Status = InvitationStatus.InviteNotSent,  
                     PartyId = party.PartyId
                 };
                 context.Invitations.Add(invitation);
